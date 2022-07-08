@@ -33,16 +33,10 @@ export const selectByPaging = async (setPage, setDeptPaging, page, size) => {
 };
 
 export const minusPage = async (page, setPage) => {
-  console.log(page);
-  await setPage(page - 1);
+  await setPage(parseInt(page) - 1);
 };
-export const plusPage = async (page, setPage) => {
-  console.log(page);
-  if (page === '1') {
-    await setPage(2);
-  } else {
-    await setPage(page + 1);
-  }
+export const plusPage = async (page, setPage, pageList) => {
+  await setPage(parseInt(page) + 1);
 };
 
 // 페이지 클릭 시 이용

@@ -158,7 +158,11 @@ function Dept() {
               );
             })}
           {deptpaging.next && (
-            <button onClick={() => plusPage(page, setPage)}>next</button>
+            <button
+              onClick={() => plusPage(page, setPage, deptpaging.pageList)}
+            >
+              next
+            </button>
           )}
         </div>
       </div>
