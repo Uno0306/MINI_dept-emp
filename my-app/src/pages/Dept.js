@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Link, Outlet, NavLink } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { Link, Outlet, NavLink, useNavigate } from "react-router-dom";
+import styled from "styled-components";
 import {
   selectByDeptno,
   selectByPaging,
@@ -9,43 +10,54 @@ import {
   changeByPageNumber,
   allSelect,
   deleteByDeptno,
-} from '../context/DeptAxios';
+} from "../context/DeptAxios";
+
+const PaginationSpan = styled.span`
+  &[aria-current] {
+    background-color: black;
+    color: white;
+  }
+`;
+
 function Dept() {
   const [depts, setDepts] = useState([]);
   const [deptpaging, setDeptPaging] = useState([]);
   const [page, setPage] = useState();
   const [dept, setDept] = useState();
   const [deleteCheck, setDeleteCheck] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (page === undefined || page === null) {
-      console.log('dsd');
     } else {
-      console.log('dd');
       changeByPageNumber(
         page,
-        document.getElementById('size').value,
+        document.getElementById("size").value,
         setDeptPaging
       );
     }
   }, [page]);
 
+  const moveUpdate = (deptno) => {
+    navigate("/dept/update/" + deptno);
+  };
+
   return (
     <div>
       <h2>부서</h2>
       <br />
-      <Link to='/dept/insert'>추가</Link>
+      <Link to="/dept/insert">추가</Link>
       <br />
       <hr />
-      <input type='number' id='num' placeholder='부서번호를 입력해주세요' />
+      <input type="number" id="num" placeholder="부서번호를 입력해주세요" />
       <input
-        type='button'
-        value='부서번호로 검색'
+        type="button"
+        value="부서번호로 검색"
         onClick={() => {
-          selectByDeptno(setDept, document.getElementById('num').value);
+          selectByDeptno(setDept, document.getElementById("num").value);
         }}
       />
-      {dept === null || dept === '' || dept === undefined ? (
+      {dept === null || dept === "" || dept === undefined ? (
         <p>테이블이 없습니다.</p>
       ) : (
         <table>
@@ -64,10 +76,26 @@ function Dept() {
               <td>{dept.dname}</td>
               <td>{dept.loc}</td>
               <td>
-                <input type='button' value='수정' />
+                <input
+                  type="button"
+                  value="수정"
+                  onClick={() => {
+                    moveUpdate(dept.deptno);
+                  }}
+                />
               </td>
               <td>
-                <input type='button' value='삭제' />
+                <input
+                  type="button"
+                  value="삭제"
+                  onClick={async () => {
+                    await deleteByDeptno(
+                      document.getElementById("num").value,
+                      deleteCheck,
+                      setDeleteCheck
+                    );
+                  }}
+                />
               </td>
             </tr>
           </tbody>
@@ -75,22 +103,22 @@ function Dept() {
       )}
       <hr />
 
-      <input type='number' id='page' placeholder='페이지 수 입력' />
-      <input type='number' id='size' placeholder='사이즈 수 입력' />
+      <input type="number" id="page" placeholder="페이지 수 입력" />
+      <input type="number" id="size" placeholder="사이즈 수 입력" />
       <input
-        type='button'
-        value='모든검색_페이징이용'
+        type="button"
+        value="모든검색_페이징이용"
         onClick={() => {
           selectByPaging(
             setPage,
             setDeptPaging,
-            document.getElementById('page').value,
-            document.getElementById('size').value
+            document.getElementById("page").value,
+            document.getElementById("size").value
           );
         }}
       />
       <br />
-      <div id='dom2'>
+      <div id="dom2">
         {deptpaging.dtoList && deptpaging.dtoList.length !== 0 ? (
           <table>
             <thead>
@@ -110,12 +138,18 @@ function Dept() {
                     <td>{data.dname}</td>
                     <td>{data.loc}</td>
                     <td>
-                      <input type='button' value='수정' />
+                      <input
+                        type="button"
+                        value="수정"
+                        onClick={() => {
+                          moveUpdate(data.deptno);
+                        }}
+                      />
                     </td>
                     <td>
                       <input
-                        type='button'
-                        value='삭제'
+                        type="button"
+                        value="삭제"
                         onClick={async () => {
                           await deleteByDeptno(
                             data.deptno,
@@ -144,25 +178,22 @@ function Dept() {
             </button>
           )}
           {deptpaging.pageList &&
-            deptpaging.pageList.map((page) => {
+            deptpaging.pageList.map((number) => {
               return (
-                <span
-                  key={page}
+                <PaginationSpan
+                  id={number}
+                  key={number}
                   onClick={(e) => {
                     setPage(e.target.id);
                   }}
-                  id={page}
+                  aria-current={page == number ? "page" : null}
                 >
-                  {page} <span> </span>
-                </span>
+                  {number} <span> </span>
+                </PaginationSpan>
               );
             })}
           {deptpaging.next && (
-            <button
-              onClick={() => plusPage(page, setPage, deptpaging.pageList)}
-            >
-              next
-            </button>
+            <button onClick={() => plusPage(page, setPage)}>next</button>
           )}
         </div>
       </div>
@@ -170,14 +201,14 @@ function Dept() {
       <hr />
 
       <input
-        type='button'
-        value='모든검색'
+        type="button"
+        value="모든검색"
         onClick={() => {
           allSelect(setDepts);
         }}
       />
       <br />
-      <div id='dom'>
+      <div id="dom">
         {depts.length !== 0 ? (
           <table>
             <thead>
@@ -197,12 +228,18 @@ function Dept() {
                     <td>{data.dname}</td>
                     <td>{data.loc}</td>
                     <td>
-                      <input type='button' value='수정' />
+                      <input
+                        type="button"
+                        value="수정"
+                        onClick={() => {
+                          moveUpdate(data.deptno);
+                        }}
+                      />
                     </td>
                     <td>
                       <input
-                        type='button'
-                        value='삭제'
+                        type="button"
+                        value="삭제"
                         onClick={async () =>
                           await deleteByDeptno(
                             data.deptno,
