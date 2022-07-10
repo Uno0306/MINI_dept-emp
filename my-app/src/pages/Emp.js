@@ -2,6 +2,24 @@ import React, { useEffect, useState } from "react";
 import { selectAllEmp, minusPage, plusPage } from "../context/EmpAxios";
 import styled from "styled-components";
 
+const PaginationUl = styled.ul`
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  padding: 5px;
+`;
+
+const PaginationLi = styled.li`
+  padding: 5px;
+  font-size: 32px;
+  border-radius: 5px;
+  &:hover {
+    cursor: pointer;
+    color: green;
+    background: orange;
+  }
+`;
+
 const PaginationSpan = styled.span`
   &[aria-current] {
     background-color: black;
@@ -82,6 +100,7 @@ function Emp() {
           <p>테이블이 없습니다.</p>
         )}
         <div>
+          <PaginationUl>
           {emps.prev && (
             <button
               onClick={() => {
@@ -94,6 +113,7 @@ function Emp() {
           {emps.pageList &&
             emps.pageList.map((number) => {
               return (
+                 <PaginationLi key={number}>
                 <PaginationSpan
                   key={number}
                   onClick={(e) => {
@@ -103,11 +123,13 @@ function Emp() {
                 >
                   {number} <span> </span>
                 </PaginationSpan>
+                </PaginationLi>
               );
             })}
           {emps.next && (
             <button onClick={() => plusPage(page, setPage)}>next</button>
           )}
+          </PaginationUl>
         </div>
       </div>
     </div>
