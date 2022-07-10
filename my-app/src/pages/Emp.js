@@ -43,13 +43,14 @@ function Emp() {
                 console.log(data);
                 return (
                   <tr key={data.empno}>
+                    <td>{data.empno}</td>
                     <td>{data.ename}</td>
                     <td>{data.job}</td>
                     <td>{data.mgr}</td>
                     <td>{data.hiredate}</td>
                     <td>{data.sal}</td>
                     <td>{data.comm}</td>
-                    <td>{data.deptno}</td>
+                    <td>{data.dept}</td>
                     <td>
                       <input
                         type="button"
