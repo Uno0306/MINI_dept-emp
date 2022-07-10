@@ -50,7 +50,7 @@ function Emp() {
                     <td>{data.hiredate}</td>
                     <td>{data.sal}</td>
                     <td>{data.comm}</td>
-                    <td>{data.dept}</td>
+                    <td>{data.dept? data.dept.deptno : null}</td>
                     <td>
                       <input
                         type="button"
